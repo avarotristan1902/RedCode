@@ -2,7 +2,7 @@
 
 RedCode is a lightweight, custom programming language interpreter built with Python on **Pydroid 3**. It is designed to be simple, colorful, and powerful enough to run logic and loops directly on an Android device.
 
-## 🚀 Latest Update: v2.6 (The Logic & Loop Update)
+## 🚀 Latest Update: v2.5 (The Logic & Loop Update)
 We have officially moved past basic commands! RedCode now supports:
 - **Variables & Memory:** Store data using `SET`.
 - **Advanced Math:** Use `CALC` for complex expressions like `(5 + 2) * 10`.
