@@ -1,0 +1,60 @@
+import random
+import time
+
+variables = {}
+COLORS = {"RED": "\033[31m", "GREEN": "\033[32m", "BLUE": "\033[34m", "RESET": "\033[0m"}
+
+def run_redcode(line):
+    tokens = line.split()
+    if not tokens: return
+    command = tokens[0].upper()
+
+    # --- IF COMMAND (The Brain) ---
+    # Usage: IF score > 50 PRINT Winner
+    if command == "IF":
+        try:
+            val1 = variables.get(tokens[1], tokens[1])
+            operator = tokens[2]
+            val2 = variables.get(tokens[3], tokens[3])
+            action = " ".join(tokens[4:])
+
+            # Convert to numbers for comparison if possible
+            v1 = int(val1) if str(val1).isdigit() else val1
+            v2 = int(val2) if str(val2).isdigit() else val2
+
+            condition = False
+            if operator == ">" and v1 > v2: condition = True
+            elif operator == "<" and v1 < v2: condition = True
+            elif operator == "==" and v1 == v2: condition = True
+
+            if condition:
+                run_redcode(action)
+        except:
+            print("Error: IF usage: IF var > val COMMAND")
+
+    # --- INPUT COMMAND ---
+    elif command == "INPUT":
+        if len(tokens) >= 3:
+            var_name = tokens[1]
+            prompt = " ".join(tokens[2:])
+            variables[var_name] = input(f"{prompt} ")
+
+    # --- SLEEP COMMAND ---
+    elif command == "SLEEP":
+        time.sleep(float(tokens[1]))
+
+    # --- REUSE PREVIOUS COMMANDS (SET, PRINT, etc.) ---
+    elif command == "SET":
+        variables[tokens[1]] = tokens[2]
+    elif command == "PRINT":
+        output = [str(variables.get(word, word)) for word in tokens[1:]]
+        print(" ".join(output))
+    # ... (Keep your SUB, RANDOM, etc. from before)
+
+# Main Shell
+print("RedCode v2.4 (Logic Update) Ready!")
+while True:
+    user_input = input("RedCode > ")
+    if user_input.upper() == "EXIT": break
+    run_redcode(user_input)
+    
