@@ -1,0 +1,66 @@
+import random
+import time
+
+variables = {}
+loop_buffer = []
+is_collecting_loop = False
+loop_condition = ""
+
+def run_redcode(line):
+    global is_collecting_loop, loop_buffer, loop_condition
+    line = line.strip()
+    if not line: return
+    tokens = line.split()
+    command = tokens[0].upper()
+
+    # --- WHILE START ---
+    if command == "WHILE":
+        is_collecting_loop = True
+        loop_condition = " ".join(tokens[1:])
+        loop_buffer = []
+        return
+
+    # --- WHILE END (Execution) ---
+    if command == "ENDWHILE":
+        is_collecting_loop = False
+        # Logic to evaluate condition (e.g., x < 5)
+        while eval_condition(loop_condition):
+            for loop_line in loop_buffer:
+                run_redcode(loop_line)
+        return
+
+    # If we are inside a loop, just save the line, don't run it yet
+    if is_collecting_loop:
+        loop_buffer.append(line)
+        return
+
+    # --- REGULAR COMMANDS ---
+    if command == "PRINT":
+        output = [str(variables.get(word, word)) for word in tokens[1:]]
+        print(" ".join(output))
+    elif command == "SET":
+        variables[tokens[1]] = tokens[2]
+    elif command == "CALC":
+        var_name = tokens[1]
+        expr = " ".join(tokens[2:])
+        for var in variables:
+            expr = expr.replace(var, str(variables[var]))
+        variables[var_name] = eval(expr)
+
+def eval_condition(cond):
+    # Simple helper to check if the loop should keep going
+    try:
+        temp_cond = cond
+        for var in variables:
+            temp_cond = temp_cond.replace(var, str(variables[var]))
+        return eval(temp_cond)
+    except:
+        return False
+
+# Main Shell
+print("RedCode v2.5 (While Loops) Ready!")
+while True:
+    prompt = "... " if is_collecting_loop else "RedCode > "
+    user_input = input(prompt)
+    if user_input.upper() == "EXIT": break
+    run_redcode(user_input)
