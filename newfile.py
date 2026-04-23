@@ -1,3 +1,31 @@
+import time # Add this at the top with 'import random'
+import os
+
+# --- Inside run_redcode(line) ---
+
+    # --- INPUT COMMAND ---
+    elif command == "INPUT":
+        # Usage: INPUT name What is your name?
+        if len(tokens) < 3:
+            print("Error: INPUT needs a variable and a prompt.")
+        else:
+            var_name = tokens[1]
+            prompt = " ".join(tokens[2:])
+            variables[var_name] = input(f"{prompt} ")
+
+    # --- SLEEP COMMAND ---
+    elif command == "SLEEP":
+        # Usage: SLEEP 2 (pauses for 2 seconds)
+        try:
+            time.sleep(float(tokens[1]))
+        except:
+            print("Error: SLEEP needs a number of seconds.")
+
+    # --- CLEAR COMMAND ---
+    elif command == "CLEAR":
+        # Clears the Pydroid terminal screen
+        print("\033[H\033[J", end="") 
+
 import random  # Required for the RANDOM command
 
 variables = {}
